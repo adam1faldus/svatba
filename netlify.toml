@@ -1,0 +1,8 @@
+[build]
+  publish = "."
+    command = "echo 'no build needed'"
+
+    [functions]
+      directory = "netlify/functions"
+        node_bundler = "esbuild"
+        
