@@ -1,0 +1,9 @@
+{
+    "name": "kacka-adam-svatba",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Svatebni web Kacka a Adam - sdileny zebricek her pres Netlify Blobs",
+    "dependencies": {
+          "@netlify/blobs": "^8.1.0"
+    }
+}
