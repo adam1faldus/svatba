@@ -911,6 +911,36 @@
     border-radius: 8px;
     overflow: hidden;
     cursor: pointer;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .flappy-game-area:fullscreen,
+  .tetris-board-wrap:fullscreen{
+    height: 100vh;
+    width: 100vw;
+    max-width: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg);
+  }
+  .fullscreen-btn{
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 5;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--color-line);
+    background: rgba(255,255,255,0.85);
+    color: var(--color-heading);
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .flappy-cloud{
     position:absolute;
@@ -1327,6 +1357,9 @@
     overflow:hidden;
     gap: 2px;
     cursor: pointer;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
   }
   .tetris-cell{
     background: transparent;
@@ -1377,9 +1410,28 @@
     cursor: pointer;
   }
   .tetris-ctrl-btn:hover{ border-color: var(--color-accent); color: var(--color-accent); }
+  .tetris-hint{
+    text-align:center;
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-accent-2);
+    opacity: 0.8;
+    margin-top: 8px;
+    display: none;
+  }
   @media (max-width: 640px){
     .tetris-board{ width: 270px; height: 450px; }
     .tetris-layout{ justify-content:center; }
+    .tetris-controls{ gap: 16px; margin-top: 22px; }
+    .tetris-ctrl-btn{
+      width: 62px;
+      height: 62px;
+      font-size: 24px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+    .tetris-hint{ display: block; }
   }
 
   @media (max-width: 640px){
@@ -1800,6 +1852,7 @@
           <span>Nejlepší dnes: <strong id="flappyBest">0</strong></span>
         </div>
         <div class="flappy-game-area" id="flappyArea">
+          <button type="button" class="fullscreen-btn" id="flappyFullscreenBtn" title="Celá obrazovka">⛶</button>
           <span class="flappy-cloud" style="left:8%; top:14px;" aria-hidden="true">☁️</span>
           <span class="flappy-cloud c2" style="left:45%;" aria-hidden="true">☁️</span>
           <span class="flappy-cloud c3" style="left:70%;" aria-hidden="true">☁️</span>
@@ -1869,6 +1922,7 @@
 
         <div class="tetris-layout">
           <div class="tetris-board-wrap">
+            <button type="button" class="fullscreen-btn" id="tetrisFullscreenBtn" title="Celá obrazovka">⛶</button>
             <span class="tetris-bg-photo photo-block" data-photo-id="tetris-bg">
               <button type="button" class="photo-upload-btn">Nahrát fotku</button>
               <input type="file" accept="image/*" class="photo-file-input" hidden>
@@ -1912,6 +1966,7 @@
           <button type="button" class="tetris-ctrl-btn" id="tetrisDown" title="Rychleji dolů">▼</button>
           <button type="button" class="tetris-ctrl-btn" id="tetrisDrop" title="Spustit dolů">⤓</button>
         </div>
+        <p class="tetris-hint">Nebo přejeď prstem po desce — doleva/doprava posun, dolů rychlejší pád, ťuknutí otočí</p>
 
         <p class="leaderboard-title">Žebříček nejlepších</p>
         <table class="leaderboard-table"><tbody id="tetrisLeaderboardBody"></tbody></table>
@@ -2126,7 +2181,7 @@
 <aside class="editor-panel editor-ui" id="editorPanel">
   <button class="editor-close" id="editorClose">✕</button>
   <h3>Upravit web</h3>
-  <p class="editor-hint">Klikni na kterýkoli text a přepiš ho. Záložky i bloky přetáhneš myší za ⠿. Křížkem ✕ blok nebo záložku smažeš, tlačítkem „+" přidáš novou. U fotek přibude tlačítko pro nahrání vlastního obrázku.</p>
+  <p class="editor-hint">Klikni na kterýkoli text a přepiš ho. Záložky i bloky přetáhneš myší za ⠿. Křížkem ✕ blok nebo záložku smažeš, tlačítkem „+" přidáš novou. U fotek přibude tlačítko pro nahrání vlastního obrázku. Uložení pro všechny hosty je chráněné heslem — dohodni se na něm s nevěstou/ženichem.</p>
 
   <h3>Písmo</h3>
   <label for="fontHeading">Nadpisy</label>
@@ -2153,9 +2208,9 @@
   <div class="editor-row" style="margin-top:6px;"><input type="color" id="colorCard" value="#fffdf8"><span>Karty</span></div>
 
   <h3>Uložení</h3>
-  <button class="editor-btn" id="btnSave">Uložit rozpracované úpravy</button>
+  <button class="editor-btn" id="btnSave">Uložit pro všechny</button>
   <button class="editor-btn secondary" id="btnReset">Obnovit výchozí vzhled</button>
-  <p class="editor-hint">Uložení funguje jen v tomto prohlížeči — slouží k tomu, aby ses mohl/a k rozpracovaným úpravám vrátit později.</p>
+  <p class="editor-hint">Při prvním uložení tě systém zeptá na heslo. Poté se úpravy (texty, barvy, fotky) zobrazí okamžitě všem, kdo web navštíví — na jakémkoli zařízení.</p>
 
   <h3>Export</h3>
   <button class="editor-btn" id="btnExport">Stáhnout hotový web (index.html)</button>
@@ -2271,6 +2326,17 @@
   }
 
   /* ---------------- EDIT MODE ---------------- */
+  var PW_KEY = 'kacka-adam-editor-pw';
+  function getCachedPassword(){
+    try{ return localStorage.getItem(PW_KEY) || ''; }catch(e){ return ''; }
+  }
+  function setCachedPassword(pw){
+    try{ localStorage.setItem(PW_KEY, pw); }catch(e){}
+  }
+  function clearCachedPassword(){
+    try{ localStorage.removeItem(PW_KEY); }catch(e){}
+  }
+
   function checkEditHash(){
     if(location.hash.replace('#','') === 'upravit'){
       editToggle.classList.add('show');
@@ -2289,14 +2355,25 @@
     editorPanel.classList.toggle('open', editMode);
   }
 
-  editToggle.addEventListener('click', function(){ setEditMode(!editMode); });
+  function enterEditMode(){
+    var cached = getCachedPassword();
+    if(cached){ setEditMode(true); return; }
+    var pw = prompt('Zadej heslo pro úpravu webu:');
+    if(pw === null || pw === '') return;
+    setCachedPassword(pw);
+    setEditMode(true);
+  }
+
+  editToggle.addEventListener('click', function(){
+    if(editMode){ setEditMode(false); } else { enterEditMode(); }
+  });
   editorClose.addEventListener('click', function(){ setEditMode(false); });
 
   var footerEditLink = document.getElementById('footerEditLink');
   if(footerEditLink){
     footerEditLink.addEventListener('click', function(){
       editToggle.classList.add('show');
-      setEditMode(true);
+      enterEditMode();
       if(location.hash.replace('#','') !== 'upravit'){
         history.replaceState(null, '', '#upravit');
       }
@@ -2373,6 +2450,28 @@
     }
   });
 
+  function downscaleImage(dataUrl, maxDim, quality){
+    return new Promise(function(resolve){
+      var img = new Image();
+      img.onload = function(){
+        var w = img.width, h = img.height;
+        var scale = Math.min(1, maxDim / Math.max(w, h));
+        var cw = Math.round(w * scale), ch = Math.round(h * scale);
+        var canvas = document.createElement('canvas');
+        canvas.width = cw; canvas.height = ch;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, cw, ch);
+        try{
+          resolve(canvas.toDataURL('image/jpeg', quality || 0.82));
+        }catch(e){
+          resolve(dataUrl);
+        }
+      };
+      img.onerror = function(){ resolve(dataUrl); };
+      img.src = dataUrl;
+    });
+  }
+
   document.addEventListener('change', function(e){
     if(e.target.matches && e.target.matches('.photo-file-input')){
       var file = e.target.files[0];
@@ -2381,9 +2480,11 @@
       reader.onload = function(ev){
         var photoBlock = e.target.closest('.photo-block');
         if(!photoBlock) return;
-        photoBlock.style.backgroundImage = 'url(' + ev.target.result + ')';
-        var label = photoBlock.querySelector('.photo-placeholder-label');
-        if(label) label.style.display = 'none';
+        downscaleImage(ev.target.result, 700, 0.82).then(function(smallUrl){
+          photoBlock.style.backgroundImage = 'url(' + smallUrl + ')';
+          var label = photoBlock.querySelector('.photo-placeholder-label');
+          if(label) label.style.display = 'none';
+        });
       };
       reader.readAsDataURL(file);
     }
@@ -2516,14 +2617,51 @@
     }
   }
 
+  var SITE_CONTENT_API = '/api/site-content';
+  function apiGetSiteContent(){
+    return fetch(SITE_CONTENT_API, { method: 'GET' })
+      .then(function(res){
+        if(!res.ok) throw new Error('site-content GET failed');
+        return res.json();
+      })
+      .then(function(data){ return data.config || null; });
+  }
+  function apiSaveSiteContent(password, cfg){
+    return fetch(SITE_CONTENT_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: password, config: cfg })
+    }).then(function(res){
+      if(res.status === 401){ var e = new Error('wrong_password'); e.code = 401; throw e; }
+      if(!res.ok) throw new Error('site-content POST failed');
+      return res.json();
+    });
+  }
+
   document.getElementById('btnSave').addEventListener('click', function(){
     var cfg = collectConfig();
-    try{
-      localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg));
-      showToast('Rozpracované úpravy uloženy v tomto prohlížeči');
-    }catch(err){
-      showToast('Uložení se nepovedlo (soubor je moc velký na localStorage)');
+    try{ localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg)); }catch(err){}
+
+    var pw = getCachedPassword();
+    if(!pw){
+      pw = prompt('Zadej heslo pro uložení pro všechny návštěvníky:');
+      if(pw === null || pw === ''){ showToast('Uloženo jen v tomto prohlížeči'); return; }
+      setCachedPassword(pw);
     }
+    var btn = document.getElementById('btnSave');
+    btn.disabled = true;
+    apiSaveSiteContent(pw, cfg).then(function(){
+      btn.disabled = false;
+      showToast('Uloženo pro všechny — hosté to uvidí hned');
+    }).catch(function(err){
+      btn.disabled = false;
+      if(err && err.code === 401){
+        clearCachedPassword();
+        showToast('Špatné heslo — zkus to znovu (uloženo zatím jen lokálně)');
+      } else {
+        showToast('Nepodařilo se uložit pro všechny — uloženo jen lokálně');
+      }
+    });
   });
 
   document.getElementById('btnReset').addEventListener('click', function(){
@@ -2570,11 +2708,27 @@
   });
 
   /* ---------------- INIT ---------------- */
-  var saved = null;
-  try{
-    var raw = localStorage.getItem(CONFIG_KEY);
-    if(raw) saved = JSON.parse(raw);
-  }catch(err){ console.warn('Nepodařilo se načíst uložené úpravy', err); }
+  function fetchSiteContentSync(){
+    try{
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', SITE_CONTENT_API, false);
+      xhr.send(null);
+      if(xhr.status >= 200 && xhr.status < 300){
+        var data = JSON.parse(xhr.responseText);
+        return data.config || null;
+      }
+    }catch(e){ /* offline, local file://, or function not deployed yet */ }
+    return null;
+  }
+
+  var saved = fetchSiteContentSync();
+  var fromServer = !!saved;
+  if(!saved){
+    try{
+      var raw = localStorage.getItem(CONFIG_KEY);
+      if(raw) saved = JSON.parse(raw);
+    }catch(err){ console.warn('Nepodařilo se načíst uložené úpravy', err); }
+  }
 
   if(saved && saved.siteWrapHTML){
     document.querySelector('.site-wrap').outerHTML = saved.siteWrapHTML;
@@ -2586,6 +2740,9 @@
       var cb = document.getElementById('hideToggleForGuests');
       if(cb) cb.checked = true;
     }
+  }
+  if(fromServer){
+    try{ localStorage.setItem(CONFIG_KEY, JSON.stringify(saved)); }catch(e){}
   }
 
   checkEditHash();
@@ -2770,6 +2927,7 @@
 
     var running = false;
     var loopId = null;
+    var lastFrameTime = null;
     var pillars = [];
     var rings = [];
     var lives = 0;
@@ -2839,6 +2997,11 @@
         renderLeaderboardList(list);
         renderStatsFromList(list);
       });
+    }
+    function refreshStatsOnly(){
+      apiGetLeaderboard(GAME_NAME).then(function(list){
+        renderStatsFromList(list);
+      }).catch(function(){});
     }
 
     function renderLeaderboard(){ refreshLeaderboardUI(); }
@@ -2935,39 +3098,41 @@
 
     function endGame(){
       running = false;
-      if(loopId) clearInterval(loopId);
+      if(loopId) cancelAnimationFrame(loopId);
       if(endScoreEl) endScoreEl.textContent = String(score);
       if(endForm) endForm.style.display = '';
       if(endResult) endResult.style.display = 'none';
       if(endMsg) endMsg.classList.add('show');
     }
 
-    function tick(){
+    function tick(frameFactor){
       var areaHeight = area.clientHeight;
 
-      velocity += GRAVITY;
-      playerY += velocity;
+      velocity += GRAVITY * frameFactor;
+      playerY += velocity * frameFactor;
 
       if(playerY < 0){ playerY = 0; handleCrash(); }
       if(playerY + 42 > areaHeight){ playerY = areaHeight - 42; handleCrash(); }
       player.style.top = playerY + 'px';
       player.style.transform = 'rotate(' + Math.max(-25, Math.min(60, velocity * 4)) + 'deg)';
 
-      spawnCounter++;
+      spawnCounter += frameFactor;
       if(spawnCounter >= SPAWN_EVERY){
         spawnCounter = 0;
         spawnPillar();
       }
 
-      ringSpawnCounter++;
+      ringSpawnCounter += frameFactor;
       if(ringSpawnCounter >= nextRingAt && lives < MAX_LIVES){
         ringSpawnCounter = 0;
         nextRingAt = RING_MIN_GAP + Math.random() * (RING_MAX_GAP - RING_MIN_GAP);
         spawnRing();
       }
 
+      var pillarStep = PILLAR_SPEED * frameFactor;
+
       pillars.forEach(function(p){
-        p.x -= PILLAR_SPEED;
+        p.x -= pillarStep;
         p.topEl.style.left = p.x + 'px';
         p.topEl.style.top = '0px';
         p.topEl.style.height = p.gapTop + 'px';
@@ -2999,7 +3164,7 @@
 
       rings.forEach(function(r){
         if(r.collected) return;
-        r.x -= PILLAR_SPEED;
+        r.x -= pillarStep;
         r.el.style.left = r.x + 'px';
         r.el.style.top = r.y + 'px';
         var playerLeft = 50, playerRight = 50 + 42, playerTop = playerY, playerBottom = playerY + 42;
@@ -3018,6 +3183,16 @@
         if(r.x < -40){ r.el.remove(); return false; }
         return true;
       });
+    }
+
+    function rafLoop(timestamp){
+      if(!running) return;
+      if(lastFrameTime === null) lastFrameTime = timestamp;
+      var dt = timestamp - lastFrameTime;
+      lastFrameTime = timestamp;
+      var frameFactor = Math.min(dt / 16.6667, 3);
+      tick(frameFactor);
+      if(running) loopId = requestAnimationFrame(rafLoop);
     }
 
     function startGame(){
@@ -3039,13 +3214,14 @@
       spawnPillar(area.clientWidth * 0.7);
       spawnCounter = Math.round(SPAWN_EVERY * 0.4);
       player.style.top = playerY + 'px';
-      if(loopId) clearInterval(loopId);
-      loopId = setInterval(tick, 16);
+      if(loopId) cancelAnimationFrame(loopId);
+      lastFrameTime = null;
+      loopId = requestAnimationFrame(rafLoop);
     }
 
     stopFlappyGame = function(){
       running = false;
-      if(loopId) clearInterval(loopId);
+      if(loopId) cancelAnimationFrame(loopId);
       if(invulnTimeout) clearTimeout(invulnTimeout);
     };
 
@@ -3062,6 +3238,18 @@
       resetRings();
       if(scoreEl) scoreEl.textContent = '0';
     };
+
+    var flappyFsBtn = document.getElementById('flappyFullscreenBtn');
+    if(flappyFsBtn){
+      flappyFsBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        if(document.fullscreenElement){
+          document.exitFullscreen();
+        } else if(area.requestFullscreen){
+          area.requestFullscreen().catch(function(){});
+        }
+      });
+    }
 
     area.addEventListener('click', function(){
       if(!running){
@@ -3101,7 +3289,7 @@
           submitBtn.disabled = false;
           showRankResult(data.rank, data.total);
           renderLeaderboardList(data.list);
-          refreshLeaderboardUI();
+          setTimeout(refreshStatsOnly, 1500);
         }).catch(function(){
           submitBtn.disabled = false;
           var list = loadLocalLeaderboard();
@@ -3136,7 +3324,7 @@
       if(!avatarEl) return;
       var charKey = avatarEl.dataset.photoId === 'avatar-groom' ? 'groom' : 'bride';
       if(charKey === currentTeam){
-        setTimeout(function(){ applyTeamSprite(); }, 50);
+        setTimeout(function(){ applyTeamSprite(); }, 400);
       }
     });
 
@@ -3415,6 +3603,11 @@
         renderStatsFromList(list);
       });
     }
+    function refreshStatsOnly(){
+      apiGetLeaderboard(GAME_NAME).then(function(list){
+        renderStatsFromList(list);
+      }).catch(function(){});
+    }
     function renderLeaderboard(){ refreshLeaderboardUI(); }
     function renderStats(){}
 
@@ -3467,6 +3660,61 @@
     }
     boardEl.addEventListener('click', function(){ if(!running && canRestart()) startGame(); });
     if(startMsg) startMsg.addEventListener('click', function(){ if(!running && canRestart()) startGame(); });
+
+    var tetrisFsBtn = document.getElementById('tetrisFullscreenBtn');
+    var boardWrapEl = document.querySelector('.tetris-board-wrap');
+    if(tetrisFsBtn){
+      tetrisFsBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        if(document.fullscreenElement){
+          document.exitFullscreen();
+        } else if(boardWrapEl && boardWrapEl.requestFullscreen){
+          boardWrapEl.requestFullscreen().catch(function(){});
+        }
+      });
+    }
+
+    /* touch gestures: swipe left/right/down to move, tap to rotate */
+    (function(){
+      var touchStartX = 0, touchStartY = 0, touchStartTime = 0, gestureHandled = false;
+      var SWIPE_THRESHOLD = 24;
+      boardEl.addEventListener('touchstart', function(e){
+        if(!running){ return; }
+        var t = e.changedTouches[0];
+        touchStartX = t.clientX;
+        touchStartY = t.clientY;
+        touchStartTime = Date.now();
+        gestureHandled = false;
+      }, { passive: true });
+      boardEl.addEventListener('touchmove', function(e){
+        if(!running || gestureHandled) return;
+        var t = e.changedTouches[0];
+        var dx = t.clientX - touchStartX;
+        var dy = t.clientY - touchStartY;
+        if(Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)){
+          moveHorizontal(dx > 0 ? 1 : -1);
+          touchStartX = t.clientX;
+          gestureHandled = true;
+          setTimeout(function(){ gestureHandled = false; }, 120);
+        } else if(dy > SWIPE_THRESHOLD * 1.4 && Math.abs(dy) > Math.abs(dx)){
+          softDrop();
+          touchStartY = t.clientY;
+          gestureHandled = true;
+          setTimeout(function(){ gestureHandled = false; }, 120);
+        }
+        e.preventDefault();
+      }, { passive: false });
+      boardEl.addEventListener('touchend', function(e){
+        if(!running) return;
+        var t = e.changedTouches[0];
+        var dx = t.clientX - touchStartX;
+        var dy = t.clientY - touchStartY;
+        var elapsed = Date.now() - touchStartTime;
+        if(Math.abs(dx) < SWIPE_THRESHOLD && Math.abs(dy) < SWIPE_THRESHOLD && elapsed < 300){
+          rotatePiece();
+        }
+      });
+    })();
 
     var leftBtn = document.getElementById('tetrisLeft');
     var rightBtn = document.getElementById('tetrisRight');
@@ -3560,7 +3808,7 @@
           submitBtn.disabled = false;
           showRankResult(data.rank, data.total);
           renderLeaderboardList(data.list);
-          refreshLeaderboardUI();
+          setTimeout(refreshStatsOnly, 1500);
         }).catch(function(){
           submitBtn.disabled = false;
           var list = loadLocalLeaderboard();
