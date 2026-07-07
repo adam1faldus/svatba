@@ -915,21 +915,40 @@
     -webkit-user-select: none;
     user-select: none;
   }
-  .flappy-game-area:fullscreen,
-  .tetris-board-wrap:fullscreen{
-    height: 100vh;
-    width: 100vw;
-    max-width: none;
+  .flappy-game-area.pseudo-fullscreen,
+  .tetris-board-wrap.pseudo-fullscreen{
+    position: fixed !important;
+    inset: 0 !important;
+    top: 0 !important; left: 0 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    max-width: none !important;
+    border-radius: 0 !important;
+    z-index: 9999 !important;
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--color-bg);
   }
+  .tetris-board-wrap.pseudo-fullscreen{ flex-direction: column; }
+  body.pseudo-fullscreen-active{ overflow: hidden; }
+  body.pseudo-fullscreen-active .tetris-controls{
+    position: fixed;
+    bottom: 18px;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    background: rgba(248,242,229,0.92);
+    padding: 14px 10px;
+    margin: 0;
+    border-radius: 16px 16px 0 0;
+  }
+  body.pseudo-fullscreen-active .tetris-hint{ display: none; }
   .fullscreen-btn{
     position: absolute;
     top: 8px;
     right: 8px;
-    z-index: 5;
+    z-index: 10000;
     width: 38px;
     height: 38px;
     border-radius: 50%;
@@ -2472,6 +2491,26 @@
     });
   }
 
+  function autoSaveOrRemindAfterPhoto(){
+    var cfg = collectConfig();
+    try{ localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg)); }catch(e){}
+    var pw = getCachedPassword();
+    if(pw){
+      apiSaveSiteContent(pw, cfg).then(function(){
+        showToast('Fotka uložena — uvidí ji hned všichni');
+      }).catch(function(err){
+        if(err && err.code === 401){
+          clearCachedPassword();
+          showToast('Heslo už nesedí — klikni dole na "Uložit pro všechny" a zadej ho znovu');
+        } else {
+          showToast('Fotku se nepodařilo uložit pro všechny — zkus tlačítko "Uložit pro všechny"');
+        }
+      });
+    } else {
+      showToast('Fotka nahraná — klikni dole na "Uložit pro všechny", ať ji uvidí i ostatní');
+    }
+  }
+
   document.addEventListener('change', function(e){
     if(e.target.matches && e.target.matches('.photo-file-input')){
       var file = e.target.files[0];
@@ -2484,6 +2523,7 @@
           photoBlock.style.backgroundImage = 'url(' + smallUrl + ')';
           var label = photoBlock.querySelector('.photo-placeholder-label');
           if(label) label.style.display = 'none';
+          autoSaveOrRemindAfterPhoto();
         });
       };
       reader.readAsDataURL(file);
@@ -2619,7 +2659,7 @@
 
   var SITE_CONTENT_API = '/api/site-content';
   function apiGetSiteContent(){
-    return fetch(SITE_CONTENT_API, { method: 'GET' })
+    return fetch(SITE_CONTENT_API, { method: 'GET', cache: 'no-store' })
       .then(function(res){
         if(!res.ok) throw new Error('site-content GET failed');
         return res.json();
@@ -2711,7 +2751,7 @@
   function fetchSiteContentSync(){
     try{
       var xhr = new XMLHttpRequest();
-      xhr.open('GET', SITE_CONTENT_API, false);
+      xhr.open('GET', SITE_CONTENT_API + '?_=' + Date.now(), false);
       xhr.send(null);
       if(xhr.status >= 200 && xhr.status < 300){
         var data = JSON.parse(xhr.responseText);
@@ -2803,7 +2843,7 @@
   var LEADERBOARD_API = '/api/leaderboard';
 
   function apiGetLeaderboard(game){
-    return fetch(LEADERBOARD_API + '?game=' + game, { method: 'GET' })
+    return fetch(LEADERBOARD_API + '?game=' + game, { method: 'GET', cache: 'no-store' })
       .then(function(res){
         if(!res.ok) throw new Error('leaderboard GET failed');
         return res.json();
@@ -3243,13 +3283,18 @@
     if(flappyFsBtn){
       flappyFsBtn.addEventListener('click', function(e){
         e.stopPropagation();
-        if(document.fullscreenElement){
-          document.exitFullscreen();
-        } else if(area.requestFullscreen){
-          area.requestFullscreen().catch(function(){});
-        }
+        var isFs = area.classList.toggle('pseudo-fullscreen');
+        document.body.classList.toggle('pseudo-fullscreen-active', isFs);
+        flappyFsBtn.textContent = isFs ? '✕' : '⛶';
       });
     }
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && area.classList.contains('pseudo-fullscreen')){
+        area.classList.remove('pseudo-fullscreen');
+        document.body.classList.remove('pseudo-fullscreen-active');
+        if(flappyFsBtn) flappyFsBtn.textContent = '⛶';
+      }
+    });
 
     area.addEventListener('click', function(){
       if(!running){
@@ -3666,13 +3711,18 @@
     if(tetrisFsBtn){
       tetrisFsBtn.addEventListener('click', function(e){
         e.stopPropagation();
-        if(document.fullscreenElement){
-          document.exitFullscreen();
-        } else if(boardWrapEl && boardWrapEl.requestFullscreen){
-          boardWrapEl.requestFullscreen().catch(function(){});
-        }
+        var isFs = boardWrapEl.classList.toggle('pseudo-fullscreen');
+        document.body.classList.toggle('pseudo-fullscreen-active', isFs);
+        tetrisFsBtn.textContent = isFs ? '✕' : '⛶';
       });
     }
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && boardWrapEl && boardWrapEl.classList.contains('pseudo-fullscreen')){
+        boardWrapEl.classList.remove('pseudo-fullscreen');
+        document.body.classList.remove('pseudo-fullscreen-active');
+        if(tetrisFsBtn) tetrisFsBtn.textContent = '⛶';
+      }
+    });
 
     /* touch gestures: swipe left/right/down to move, tap to rotate */
     (function(){
