@@ -215,22 +215,39 @@
     width:100%;
     align-items:center;
     justify-content:space-between;
-    background: var(--color-card);
-    border: 1px solid var(--color-line);
-    border-radius: 8px;
-    padding: 15px 18px;
+    background: var(--color-heading);
+    border: none;
+    border-radius: 10px;
+    padding: 16px 20px;
     font-family: var(--font-label);
-    font-weight: 400;
-    letter-spacing: 0.08em;
+    font-weight: 500;
+    letter-spacing: 0.09em;
     text-transform: uppercase;
-    font-size: 13px;
-    color: var(--color-heading);
+    font-size: 14px;
+    color: #fff;
     cursor: pointer;
+    box-shadow: 0 4px 14px rgba(74,58,44,0.28);
+  }
+  .mobile-tab-trigger::before{
+    content: "☰";
+    margin-right: 10px;
+    font-size: 15px;
+    opacity: 0.85;
+  }
+  .mobile-tab-trigger-label{ flex: 1; text-align: left; display:flex; align-items:baseline; gap:8px; }
+  .mobile-tab-trigger-label small{
+    font-family: var(--font-body);
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+    opacity: 0.75;
+    font-size: 12px;
   }
   .mobile-tab-trigger .chevron{
-    font-size: 16px;
+    font-size: 18px;
     color: var(--color-accent);
     transition: transform .2s ease;
+    flex: 0 0 auto;
   }
   .mobile-tab-trigger.open .chevron{ transform: rotate(180deg); }
 
@@ -246,36 +263,36 @@
     margin-bottom: 32px;
     background: linear-gradient(to bottom, var(--color-bg) 82%, transparent);
     backdrop-filter: blur(2px);
-    border-bottom: 1px solid var(--color-line);
+    border-bottom: 2px solid var(--color-line);
   }
 
   .tab-btn{
     position: relative;
     flex: 0 0 auto;
-    background: none;
-    border: none;
+    background: var(--color-card);
+    border: 1px solid var(--color-line);
     cursor: pointer;
     font-family: var(--font-label);
-    font-size: 13px;
-    font-weight: 400;
+    font-size: 13.5px;
+    font-weight: 500;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--color-text);
-    padding: 12px 22px 15px;
+    color: var(--color-heading);
+    padding: 13px 22px;
     display: flex;
     align-items: center;
     gap: 7px;
-    border-bottom: 3px solid transparent;
-    border-radius: 6px 6px 0 0;
-    transition: color .2s, border-color .2s, background .2s;
+    border-radius: 999px;
+    transition: color .2s, border-color .2s, background .2s, box-shadow .2s, transform .15s;
     white-space: nowrap;
   }
-  .tab-btn:hover{ color: var(--color-accent); background: rgba(184,134,47,0.07); }
+  .tab-btn:hover{ color: var(--color-accent); border-color: var(--color-accent); transform: translateY(-1px); }
   .tab-btn.active{
-    color: var(--color-accent);
-    border-bottom-color: var(--color-accent);
-    background: rgba(184,134,47,0.09);
+    color: #fff;
+    background: var(--color-accent);
+    border-color: var(--color-accent);
     font-weight: 700;
+    box-shadow: 0 3px 10px rgba(184,134,47,0.4);
   }
   .tab-label{ pointer-events:none; }
   body.edit-mode .tab-label{ pointer-events:auto; cursor:text; }
@@ -637,6 +654,48 @@
   }
   .editor-toggle.show{ display:flex; }
 
+  .text-format-toolbar{
+    display: none;
+    position: fixed;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 101;
+    background: var(--color-heading);
+    border-radius: 999px;
+    padding: 8px 10px;
+    gap: 4px;
+    align-items: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  }
+  .text-format-toolbar.show{ display: flex; }
+  .text-format-toolbar button{
+    background: none;
+    border: none;
+    color: #fff;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    font-family: var(--font-body);
+    font-size: 15px;
+    cursor: pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .text-format-toolbar button:hover{ background: rgba(255,255,255,0.15); }
+  .text-format-toolbar button.active-format{ background: var(--color-accent); }
+  .text-format-toolbar .tf-sep{
+    width: 1px;
+    height: 20px;
+    background: rgba(255,255,255,0.25);
+    margin: 0 2px;
+  }
+  @media (max-width: 480px){
+    .text-format-toolbar{ bottom: 12px; padding: 6px 8px; }
+    .text-format-toolbar button{ width: 30px; height: 30px; font-size: 13px; }
+  }
+
   .editor-panel{
     position: fixed;
     top:0; right:-340px;
@@ -763,6 +822,28 @@
     color: var(--color-heading);
   }
   body.edit-mode .photo-upload-btn{ display:block; }
+  .photo-resize-handle{
+    display:none;
+    position:absolute;
+    bottom: -8px;
+    right: -8px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    border: 3px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    cursor: nwse-resize;
+    z-index: 6;
+    touch-action: none;
+  }
+  body.edit-mode .photo-block:not(.flappy-avatar):not(.tetris-bg-photo) .photo-resize-handle{
+    display: block;
+  }
+  .photo-block.resizing{
+    outline: 2px dashed var(--color-accent);
+    outline-offset: 3px;
+  }
   .photo-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   @media (max-width: 640px){ .photo-grid{ grid-template-columns: 1fr; } }
 
@@ -936,6 +1017,7 @@
     inset: 0 !important;
     top: 0 !important; left: 0 !important;
     width: 100vw !important;
+    height: 100svh !important;
     height: 100dvh !important;
     max-width: none !important;
     border-radius: 0 !important;
@@ -1630,6 +1712,7 @@
       display: flex;
       width: 100%;
       justify-content: space-between;
+      border: none;
       border-bottom: 1px solid var(--color-line);
       border-radius: 6px;
       padding: 15px 12px;
@@ -1700,7 +1783,7 @@
 
   <div class="nav-wrap">
     <button class="mobile-tab-trigger" id="mobileTabTrigger" type="button">
-      <span id="mobileTabLabel">Domů</span>
+      <span class="mobile-tab-trigger-label"><small>Menu:</small> <span id="mobileTabLabel">Domů</span></span>
       <span class="chevron">⌄</span>
     </button>
     <nav class="tabs-nav" id="tabsNav" role="tablist">
@@ -1775,6 +1858,7 @@
           <span class="photo-placeholder-label">Sem vlož společnou fotku</span>
           <button class="photo-upload-btn">Nahrát fotku</button>
           <input type="file" accept="image/*" class="photo-file-input" hidden>
+          <span class="photo-resize-handle" title="Táhni pro změnu velikosti"></span>
         </div>
       </div>
       <div class="block" data-block-id="story-text">
@@ -1881,21 +1965,25 @@
             <span class="photo-placeholder-label">Fotka 1</span>
             <button class="photo-upload-btn">Nahrát fotku</button>
             <input type="file" accept="image/*" class="photo-file-input" hidden>
+          <span class="photo-resize-handle" title="Táhni pro změnu velikosti"></span>
           </div>
           <div class="photo-block" data-photo-id="gallery-2">
             <span class="photo-placeholder-label">Fotka 2</span>
             <button class="photo-upload-btn">Nahrát fotku</button>
             <input type="file" accept="image/*" class="photo-file-input" hidden>
+          <span class="photo-resize-handle" title="Táhni pro změnu velikosti"></span>
           </div>
           <div class="photo-block" data-photo-id="gallery-3">
             <span class="photo-placeholder-label">Fotka 3</span>
             <button class="photo-upload-btn">Nahrát fotku</button>
             <input type="file" accept="image/*" class="photo-file-input" hidden>
+          <span class="photo-resize-handle" title="Táhni pro změnu velikosti"></span>
           </div>
           <div class="photo-block" data-photo-id="gallery-4">
             <span class="photo-placeholder-label">Fotka 4</span>
             <button class="photo-upload-btn">Nahrát fotku</button>
             <input type="file" accept="image/*" class="photo-file-input" hidden>
+          <span class="photo-resize-handle" title="Táhni pro změnu velikosti"></span>
           </div>
         </div>
       </div>
@@ -2345,10 +2433,22 @@
 <!-- EDITOR UI -->
 <button class="editor-toggle editor-ui show" id="editToggle" title="Upravit web">✎</button>
 
+<div class="text-format-toolbar editor-ui" id="textFormatToolbar">
+  <button type="button" data-cmd="bold" title="Tučně"><b>B</b></button>
+  <button type="button" data-cmd="italic" title="Kurzíva"><i>I</i></button>
+  <span class="tf-sep"></span>
+  <button type="button" data-cmd="justifyLeft" title="Zarovnat vlevo">⯇</button>
+  <button type="button" data-cmd="justifyCenter" title="Na střed">▬</button>
+  <button type="button" data-cmd="justifyRight" title="Zarovnat vpravo">⯈</button>
+  <span class="tf-sep"></span>
+  <button type="button" data-cmd="fontSizeUp" title="Větší písmo">A+</button>
+  <button type="button" data-cmd="fontSizeDown" title="Menší písmo">A−</button>
+</div>
+
 <aside class="editor-panel editor-ui" id="editorPanel">
   <button class="editor-close" id="editorClose">✕</button>
   <h3>Upravit web</h3>
-  <p class="editor-hint">Klikni na kterýkoli text a přepiš ho. Záložky i bloky přetáhneš myší za ⠿. Křížkem ✕ blok nebo záložku smažeš, tlačítkem „+" přidáš novou. U fotek přibude tlačítko pro nahrání vlastního obrázku. Uložení pro všechny hosty je chráněné heslem — dohodni se na něm s nevěstou/ženichem.</p>
+  <p class="editor-hint">Klikni na kterýkoli text a přepiš ho — nad klávesnicí/dole na obrazovce se objeví panel na tučně/kurzívu/zarovnání/velikost písma. Záložky i bloky přetáhneš myší za ⠿. Křížkem ✕ blok nebo záložku smažeš, tlačítkem „+" přidáš novou (i fotku kamkoli). U fotky táhni za tečku v pravém dolním rohu, ať změníš její velikost. Uložení pro všechny hosty je chráněné heslem — dohodni se na něm s nevěstou/ženichem.</p>
 
   <h3>Písmo</h3>
   <label for="fontHeading">Nadpisy</label>
@@ -2691,6 +2791,97 @@
     }
   });
 
+  /* ---------------- TEXT FORMAT TOOLBAR ---------------- */
+  (function(){
+    var toolbar = document.getElementById('textFormatToolbar');
+    if(!toolbar) return;
+    var currentTarget = null;
+
+    document.addEventListener('focusin', function(e){
+      if(!editMode) return;
+      var el = e.target.closest('.editable');
+      if(!el) return;
+      currentTarget = el;
+      toolbar.classList.add('show');
+    });
+    document.addEventListener('focusout', function(e){
+      setTimeout(function(){
+        var active = document.activeElement;
+        if(!active || !active.closest || !active.closest('.editable')){
+          toolbar.classList.remove('show');
+          currentTarget = null;
+        }
+      }, 120);
+    });
+
+    toolbar.querySelectorAll('button').forEach(function(btn){
+      btn.addEventListener('mousedown', function(e){
+        e.preventDefault();
+        if(!currentTarget) return;
+        var cmd = btn.dataset.cmd;
+        if(cmd === 'fontSizeUp' || cmd === 'fontSizeDown'){
+          var size = parseFloat(getComputedStyle(currentTarget).fontSize);
+          var next = cmd === 'fontSizeUp' ? size * 1.12 : size / 1.12;
+          currentTarget.style.fontSize = Math.max(11, Math.round(next)) + 'px';
+          return;
+        }
+        try{ document.execCommand(cmd, false, null); }catch(err){}
+      });
+    });
+  })();
+
+  /* ---------------- PHOTO RESIZE ---------------- */
+  (function(){
+    var activeBlock = null;
+    var startX = 0;
+    var startWidth = 0;
+
+    function onMove(clientX){
+      if(!activeBlock) return;
+      var delta = clientX - startX;
+      var newWidth = Math.max(80, Math.min(startWidth + delta, activeBlock.parentElement.offsetWidth || 900));
+      activeBlock.style.width = newWidth + 'px';
+      activeBlock.style.maxWidth = 'none';
+    }
+
+    function stop(){
+      if(activeBlock) activeBlock.classList.remove('resizing');
+      activeBlock = null;
+      document.removeEventListener('mousemove', mouseMoveHandler);
+      document.removeEventListener('mouseup', stop);
+      document.removeEventListener('touchmove', touchMoveHandler);
+      document.removeEventListener('touchend', stop);
+    }
+    function mouseMoveHandler(e){ onMove(e.clientX); }
+    function touchMoveHandler(e){
+      if(e.touches && e.touches[0]){ onMove(e.touches[0].clientX); e.preventDefault(); }
+    }
+
+    document.addEventListener('mousedown', function(e){
+      var handle = e.target.closest('.photo-resize-handle');
+      if(!handle || !editMode) return;
+      activeBlock = handle.closest('.photo-block');
+      if(!activeBlock) return;
+      startX = e.clientX;
+      startWidth = activeBlock.offsetWidth;
+      activeBlock.classList.add('resizing');
+      document.addEventListener('mousemove', mouseMoveHandler);
+      document.addEventListener('mouseup', stop);
+      e.preventDefault();
+    });
+    document.addEventListener('touchstart', function(e){
+      var handle = e.target.closest('.photo-resize-handle');
+      if(!handle || !editMode) return;
+      activeBlock = handle.closest('.photo-block');
+      if(!activeBlock || !e.touches[0]) return;
+      startX = e.touches[0].clientX;
+      startWidth = activeBlock.offsetWidth;
+      activeBlock.classList.add('resizing');
+      document.addEventListener('touchmove', touchMoveHandler, { passive: false });
+      document.addEventListener('touchend', stop);
+    }, { passive: true });
+  })();
+
   function downscaleImage(dataUrl, maxDim, quality){
     return new Promise(function(resolve){
       var img = new Image();
@@ -2850,6 +3041,7 @@
         '<span class="photo-placeholder-label">Sem vlož fotku</span>' +
         '<button type="button" class="photo-upload-btn">Nahrát fotku</button>' +
         '<input type="file" accept="image/*" class="photo-file-input" hidden>' +
+        '<span class="photo-resize-handle" title="Táhni pro změnu velikosti"></span>' +
       '</div>';
     panel.insertBefore(div, triggerBtn);
     if(editMode){
@@ -4030,6 +4222,21 @@
     var tetrisFsBtn = document.getElementById('tetrisFullscreenBtn');
     var boardWrapEl = document.querySelector('.tetris-board-wrap');
 
+    function getReliableViewportHeight(){
+      var candidates = [];
+      if(window.visualViewport && window.visualViewport.height){
+        candidates.push(window.visualViewport.height);
+      }
+      if(document.documentElement && document.documentElement.clientHeight){
+        candidates.push(document.documentElement.clientHeight);
+      }
+      if(window.innerHeight){
+        candidates.push(window.innerHeight);
+      }
+      if(candidates.length === 0) return 600;
+      return Math.min.apply(null, candidates);
+    }
+
     function resizeTetrisBoardForFullscreen(){
       if(!boardWrapEl || !boardWrapEl.classList.contains('pseudo-fullscreen')){
         boardEl.style.width = '';
@@ -4040,9 +4247,11 @@
       var hudEl = boardWrapEl.querySelector('.tetris-hud');
       var controlsHeight = controlsEl ? controlsEl.offsetHeight : 0;
       var hudHeight = hudEl ? hudEl.offsetHeight : 0;
-      var available = window.innerHeight - controlsHeight - hudHeight - 36;
-      if(available < 200) available = 200;
-      var maxWidth = window.innerWidth * 0.9;
+      var viewportHeight = getReliableViewportHeight();
+      var SAFETY_MARGIN = 70;
+      var available = (viewportHeight - controlsHeight - hudHeight - SAFETY_MARGIN) * 0.92;
+      if(available < 180) available = 180;
+      var maxWidth = window.innerWidth * 0.88;
       var width = Math.min(maxWidth, available * 0.6);
       var height = width / 0.6;
       if(height > available){ height = available; width = height * 0.6; }
@@ -4057,14 +4266,20 @@
         document.body.classList.toggle('pseudo-fullscreen-active', isFs);
         tetrisFsBtn.textContent = isFs ? '✕' : '⛶';
         resizeTetrisBoardForFullscreen();
-        setTimeout(resizeTetrisBoardForFullscreen, 60);
-        setTimeout(resizeTetrisBoardForFullscreen, 300);
+        [50, 150, 300, 500, 900].forEach(function(delay){
+          setTimeout(resizeTetrisBoardForFullscreen, delay);
+        });
       });
     }
     window.addEventListener('resize', resizeTetrisBoardForFullscreen);
     window.addEventListener('orientationchange', function(){
       setTimeout(resizeTetrisBoardForFullscreen, 200);
+      setTimeout(resizeTetrisBoardForFullscreen, 600);
     });
+    if(window.visualViewport){
+      window.visualViewport.addEventListener('resize', resizeTetrisBoardForFullscreen);
+      window.visualViewport.addEventListener('scroll', resizeTetrisBoardForFullscreen);
+    }
     document.addEventListener('keydown', function(e){
       if(e.key === 'Escape' && boardWrapEl && boardWrapEl.classList.contains('pseudo-fullscreen')){
         boardWrapEl.classList.remove('pseudo-fullscreen');
