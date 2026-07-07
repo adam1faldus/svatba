@@ -944,18 +944,28 @@
     align-items: center;
     justify-content: center;
     background: var(--color-bg);
+    touch-action: manipulation;
   }
   .tetris-board-wrap.pseudo-fullscreen{ flex-direction: column; }
-  .tetris-board-wrap.pseudo-fullscreen .tetris-board{
-    height: calc(100dvh - 230px) !important;
-    width: calc((100dvh - 230px) * 0.6) !important;
-    max-width: 90vw !important;
-    max-height: calc(90vw / 0.6) !important;
-  }
   .tetris-board-wrap.pseudo-fullscreen .tetris-hud{
     margin-bottom: 6px;
   }
-  body.pseudo-fullscreen-active{ overflow: hidden; }
+  body.pseudo-fullscreen-active{ overflow: hidden; touch-action: manipulation; }
+  body.pseudo-fullscreen-active .flappy-hud{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    background: rgba(248,242,229,0.94);
+    padding: 12px 16px;
+    margin: 0;
+    border-radius: 0 0 14px 14px;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
   body.pseudo-fullscreen-active .tetris-controls{
     position: fixed;
     bottom: 18px;
@@ -966,8 +976,10 @@
     padding: 14px 10px;
     margin: 0;
     border-radius: 16px 16px 0 0;
+    touch-action: manipulation;
   }
   body.pseudo-fullscreen-active .tetris-hint{ display: none; }
+  .tetris-ctrl-btn{ touch-action: manipulation; }
   .fullscreen-btn{
     position: absolute;
     top: 8px;
@@ -1454,7 +1466,7 @@
     align-items:flex-start;
     flex-wrap: wrap;
   }
-  .tetris-board-wrap{ position: relative; }
+  .tetris-board-wrap{ position: relative; touch-action: manipulation; }
   .tetris-bg-photo.photo-block{
     position: absolute;
     inset: 0;
@@ -3374,8 +3386,14 @@
     function updateLivesHud(){
       var livesEl = document.getElementById('flappyLives');
       if(!livesEl) return;
+      if(lives <= 0){ livesEl.textContent = ''; return; }
       var ringIcon = currentTeam === 'groom' ? '⭕' : '💍';
-      livesEl.textContent = lives > 0 ? (ringIcon + ' × ' + lives) : '';
+      var MAX_VISIBLE_ICONS = 3;
+      if(lives <= MAX_VISIBLE_ICONS){
+        livesEl.textContent = ringIcon.repeat(lives);
+      } else {
+        livesEl.textContent = ringIcon.repeat(MAX_VISIBLE_ICONS) + ' +' + (lives - MAX_VISIBLE_ICONS);
+      }
     }
 
     function triggerInvulnerability(){
@@ -4011,19 +4029,48 @@
 
     var tetrisFsBtn = document.getElementById('tetrisFullscreenBtn');
     var boardWrapEl = document.querySelector('.tetris-board-wrap');
+
+    function resizeTetrisBoardForFullscreen(){
+      if(!boardWrapEl || !boardWrapEl.classList.contains('pseudo-fullscreen')){
+        boardEl.style.width = '';
+        boardEl.style.height = '';
+        return;
+      }
+      var controlsEl = document.querySelector('.tetris-controls');
+      var hudEl = boardWrapEl.querySelector('.tetris-hud');
+      var controlsHeight = controlsEl ? controlsEl.offsetHeight : 0;
+      var hudHeight = hudEl ? hudEl.offsetHeight : 0;
+      var available = window.innerHeight - controlsHeight - hudHeight - 36;
+      if(available < 200) available = 200;
+      var maxWidth = window.innerWidth * 0.9;
+      var width = Math.min(maxWidth, available * 0.6);
+      var height = width / 0.6;
+      if(height > available){ height = available; width = height * 0.6; }
+      boardEl.style.height = Math.round(height) + 'px';
+      boardEl.style.width = Math.round(width) + 'px';
+    }
+
     if(tetrisFsBtn){
       tetrisFsBtn.addEventListener('click', function(e){
         e.stopPropagation();
         var isFs = boardWrapEl.classList.toggle('pseudo-fullscreen');
         document.body.classList.toggle('pseudo-fullscreen-active', isFs);
         tetrisFsBtn.textContent = isFs ? '✕' : '⛶';
+        resizeTetrisBoardForFullscreen();
+        setTimeout(resizeTetrisBoardForFullscreen, 60);
+        setTimeout(resizeTetrisBoardForFullscreen, 300);
       });
     }
+    window.addEventListener('resize', resizeTetrisBoardForFullscreen);
+    window.addEventListener('orientationchange', function(){
+      setTimeout(resizeTetrisBoardForFullscreen, 200);
+    });
     document.addEventListener('keydown', function(e){
       if(e.key === 'Escape' && boardWrapEl && boardWrapEl.classList.contains('pseudo-fullscreen')){
         boardWrapEl.classList.remove('pseudo-fullscreen');
         document.body.classList.remove('pseudo-fullscreen-active');
         if(tetrisFsBtn) tetrisFsBtn.textContent = '⛶';
+        resizeTetrisBoardForFullscreen();
       }
     });
 
