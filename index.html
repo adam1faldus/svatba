@@ -279,6 +279,11 @@
   }
   .tab-label{ pointer-events:none; }
   body.edit-mode .tab-label{ pointer-events:auto; cursor:text; }
+  .tab-btn.drop-target{
+    background: rgba(92,122,99,0.22) !important;
+    outline: 2px dashed var(--color-accent-2);
+    outline-offset: 2px;
+  }
 
   .tab-delete, .block-delete{
     display:none;
@@ -317,8 +322,14 @@
   body.edit-mode .add-tab-btn{ display:flex; }
   .add-tab-btn:hover{ background: rgba(92,122,99,0.08); }
 
-  .add-block-btn{
+  .add-btn-row{
     display:none;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  body.edit-mode .add-btn-row{ display:flex; }
+  .add-block-btn{
+    display:block;
     width:100%;
     padding: 16px;
     border: 1px dashed var(--color-line);
@@ -329,10 +340,14 @@
     font-size: 15px;
     letter-spacing: 0.05em;
     cursor:pointer;
-    margin-bottom: 22px;
+    margin-bottom: 0;
   }
-  body.edit-mode .add-block-btn{ display:block; }
   .add-block-btn:hover{ background: rgba(92,122,99,0.07); }
+  .free-photo-block{
+    aspect-ratio: 4 / 3;
+    max-width: 420px;
+    margin: 0 auto;
+  }
   .tab-btn .drag-handle{
     display:none;
     cursor: grab;
@@ -931,6 +946,15 @@
     background: var(--color-bg);
   }
   .tetris-board-wrap.pseudo-fullscreen{ flex-direction: column; }
+  .tetris-board-wrap.pseudo-fullscreen .tetris-board{
+    height: calc(100dvh - 230px) !important;
+    width: calc((100dvh - 230px) * 0.6) !important;
+    max-width: 90vw !important;
+    max-height: calc(90vw / 0.6) !important;
+  }
+  .tetris-board-wrap.pseudo-fullscreen .tetris-hud{
+    margin-bottom: 6px;
+  }
   body.pseudo-fullscreen-active{ overflow: hidden; }
   body.pseudo-fullscreen-active .tetris-controls{
     position: fixed;
@@ -957,9 +981,12 @@
     color: var(--color-heading);
     font-size: 15px;
     cursor: pointer;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
+  }
+  @media (max-width: 640px){
+    .fullscreen-btn{ display: flex; }
   }
   .flappy-cloud{
     position:absolute;
@@ -1079,31 +1106,106 @@
     background: rgba(248,242,229,0.95);
     z-index: 3;
   }
-  .flappy-play-icon{
-    width: 58px; height: 58px;
+  .flappy-preview-scene{
+    position: relative;
+    width: 150px;
+    height: 100px;
+    margin: 0 auto 10px;
+  }
+  .flappy-preview-bird{
+    position: absolute;
+    left: 14px;
+    top: 32px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
-    background: var(--color-accent);
-    color: #fff;
+    background-color: var(--color-accent-2);
+    background-size: cover;
+    background-position: center;
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size: 22px;
-    margin-bottom: 4px;
-    box-shadow: 0 3px 10px rgba(184,134,47,0.4);
+    font-family: var(--font-heading);
+    font-style: italic;
+    color: #fff;
+    font-size: 1rem;
+    border: 2px solid #fff;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+    animation: previewBob 1.3s ease-in-out infinite;
+    z-index: 2;
+  }
+  .flappy-preview-pillar{
+    position: absolute;
+    right: 30px;
+    width: 26px;
+    background: linear-gradient(90deg, var(--color-accent-2), #6f8c76);
+    border-radius: 3px;
+  }
+  .flappy-preview-pillar.top{ top:0; height: 32px; }
+  .flappy-preview-pillar.bot{ bottom:0; height: 32px; }
+  .flappy-preview-pillar .cap{ position:absolute; left:50%; transform:translateX(-50%); font-size:1.1rem; }
+  .flappy-preview-pillar.top .cap{ bottom:-10px; transform:translateX(-50%) rotate(180deg); }
+  .flappy-preview-pillar.bot .cap{ top:-10px; }
+  @keyframes previewBob{
+    0%, 100%{ transform: translateY(0) rotate(-6deg); }
+    50%{ transform: translateY(-16px) rotate(8deg); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .flappy-preview-bird{ animation: none; }
+  }
+  .tetris-preview-scene{
+    position: relative;
+    width: 78px;
+    height: 90px;
+    margin: 0 auto 10px;
+  }
+  .tp-fall-cell{
+    position: absolute;
+    top: -30px;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size: 11px;
+    animation: tpFall 1.8s ease-in infinite;
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,0.3), inset -2px -2px 0 rgba(0,0,0,0.15);
+  }
+  .tp-stack-cell{
+    position: absolute;
+    bottom: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size: 11px;
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,0.3), inset -2px -2px 0 rgba(0,0,0,0.15);
+  }
+  @keyframes tpFall{
+    0%{ top: -30px; opacity: 1; }
+    65%{ top: 62px; opacity: 1; }
+    66%{ top: 62px; opacity: 0; }
+    100%{ top: -30px; opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .tp-fall-cell{ animation: none; top: 62px; }
   }
   .flappy-start-title{
     font-family: var(--font-heading);
     font-style: italic;
     font-size: 1.5rem;
     color: var(--color-heading);
-    margin: 0;
+    margin: 0 0 12px;
   }
   .flappy-start-sub{
     font-family: var(--font-body);
     font-size: 0.95rem;
     color: var(--color-text);
     max-width: 260px;
-    margin: 0;
+    margin: 12px 0 0;
   }
   .flappy-endmsg{ display:none; }
   .flappy-endmsg.show{ display:flex; }
@@ -1142,6 +1244,25 @@
     text-align: center;
     background: #fff;
   }
+  .endmsg-mini-leaderboard{
+    width: 100%;
+    max-width: 280px;
+    margin: 4px auto 4px;
+    border-collapse: collapse;
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+  }
+  .endmsg-mini-leaderboard td{
+    padding: 5px 8px;
+    border-bottom: 1px solid var(--color-line);
+    text-align: left;
+  }
+  .endmsg-mini-leaderboard td:last-child{ text-align: right; font-family: var(--font-label); }
+  .endmsg-mini-leaderboard tr.me{
+    background: rgba(184,134,47,0.14);
+    font-weight: 600;
+  }
+  .endmsg-mini-leaderboard tr:first-child td{ color: var(--color-accent); font-weight: 600; }
   .catch-nickname-row{
     display:none;
     gap: 10px;
@@ -1629,7 +1750,7 @@
         <span class="drag-handle-block">⠿</span>
         <div class="center-flower bg-spray" role="img" aria-label="Kaččina malovaná kytička"></div>
       </div>
-      <button class="add-block-btn" data-add-block="home">+ Přidat blok</button>
+      <div class="add-btn-row"><button class="add-block-btn" data-add-block="home">+ Přidat blok</button><button class="add-block-btn add-photo-btn" data-add-block="home">+ Přidat fotku</button></div>
     </section>
 
     <!-- STORY -->
@@ -1651,7 +1772,7 @@
         <p class="editable" data-edit-id="story-text-1">Sem doplníme, jak jsme se poznali a co nás k sobě přivedlo.</p>
         <p class="editable" data-edit-id="story-text-2">A sem třeba to, jak proběhly zásnuby.</p>
       </div>
-      <button class="add-block-btn" data-add-block="story">+ Přidat blok</button>
+      <div class="add-btn-row"><button class="add-block-btn" data-add-block="story">+ Přidat blok</button><button class="add-block-btn add-photo-btn" data-add-block="story">+ Přidat fotku</button></div>
     </section>
 
     <!-- WHEN & WHERE -->
@@ -1675,7 +1796,7 @@
         <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=Tvrz+Ho%C5%99enice,+Ho%C5%99enice+1,+551+01+Ho%C5%99enice" target="_blank" rel="noopener">Naplánovat trasu →</a>
         <p class="note-line editable" data-edit-id="when-arrival-note">Na místo prosím přijeďte přibližně hodinu před začátkem obřadu.</p>
       </div>
-      <button class="add-block-btn" data-add-block="when">+ Přidat blok</button>
+      <div class="add-btn-row"><button class="add-block-btn" data-add-block="when">+ Přidat blok</button><button class="add-block-btn add-photo-btn" data-add-block="when">+ Přidat fotku</button></div>
     </section>
 
     <!-- PROGRAM -->
@@ -1707,7 +1828,7 @@
           </div>
         </div>
       </div>
-      <button class="add-block-btn" data-add-block="program">+ Přidat blok</button>
+      <div class="add-btn-row"><button class="add-block-btn" data-add-block="program">+ Přidat blok</button><button class="add-block-btn add-photo-btn" data-add-block="program">+ Přidat fotku</button></div>
     </section>
 
     <!-- TRAVEL -->
@@ -1733,7 +1854,7 @@
         <h2 class="editable" data-edit-id="travel-nearby-title">Co u nás vidět, když zůstanete déle</h2>
         <p class="editable" data-edit-id="travel-nearby-text">Sem doplníme pár tipů na výlet po okolí pro hosty, kteří přijedou zdaleka.</p>
       </div>
-      <button class="add-block-btn" data-add-block="travel">+ Přidat blok</button>
+      <div class="add-btn-row"><button class="add-block-btn" data-add-block="travel">+ Přidat blok</button><button class="add-block-btn add-photo-btn" data-add-block="travel">+ Přidat fotku</button></div>
     </section>
 
     <!-- GALLERY -->
@@ -1766,7 +1887,7 @@
           </div>
         </div>
       </div>
-      <button class="add-block-btn" data-add-block="gallery">+ Přidat blok</button>
+      <div class="add-btn-row"><button class="add-block-btn" data-add-block="gallery">+ Přidat blok</button><button class="add-block-btn add-photo-btn" data-add-block="gallery">+ Přidat fotku</button></div>
     </section>
 
     <!-- GAME -->
@@ -1887,9 +2008,14 @@
           <span class="flappy-ground-flower" style="left:94%;" aria-hidden="true">🌻</span>
           <div class="flappy-player" id="flappyPlayer"><span id="flappyPlayerInitial">K</span></div>
           <div class="flappy-startmsg" id="flappyStartMsg">
-            <div class="flappy-play-icon">▶</div>
+            <div class="flappy-preview-scene">
+              <div class="flappy-preview-pillar top"><span class="cap">🌸</span></div>
+              <div class="flappy-preview-pillar bot"><span class="cap">🌼</span></div>
+              <div class="flappy-preview-bird" id="flappyPreviewBird"><span id="flappyPreviewInitial">K</span></div>
+            </div>
             <p class="flappy-start-title">Poleť přes kytičky</p>
-            <p class="flappy-start-sub">Klikni sem, ťukni na obrazovku nebo mačkej mezerník — postavička poletí nahoru. Sbírej prstýnky pro život navíc a vyhni se nárazu do sloupků.</p>
+            <button type="button" class="btn btn-primary" id="flappyStartBtn">▶ Hrát</button>
+            <p class="flappy-start-sub">Sbírej prstýnky pro život navíc a vyhni se nárazu do sloupků.</p>
           </div>
           <div class="flappy-endmsg" id="flappyEndMsg">
             <div class="endmsg-phase" id="flappyEndForm">
@@ -1903,6 +2029,7 @@
             </div>
             <div class="endmsg-phase" id="flappyEndResult" style="display:none;">
               <p class="endmsg-title" id="flappyRankText">Jsi na 1. místě!</p>
+              <table class="endmsg-mini-leaderboard" id="flappyMiniLeaderboard"></table>
               <button class="btn btn-primary" id="flappyPlayAgain" type="button">Hrát znovu ↻</button>
             </div>
           </div>
@@ -1952,9 +2079,17 @@
             </div>
             <div class="tetris-board" id="tetrisBoard"></div>
             <div class="flappy-startmsg" id="tetrisStartMsg">
-              <div class="flappy-play-icon">▶</div>
+              <div class="tetris-preview-scene">
+                <span class="tp-fall-cell" style="background:#b8862f; left:0;">💍</span>
+                <span class="tp-fall-cell" style="background:#a8555a; left:26px; animation-delay:.25s;">🎂</span>
+                <span class="tp-fall-cell" style="background:#5c7a63; left:52px; animation-delay:.5s;">💐</span>
+                <span class="tp-stack-cell" style="background:#9c6b3e; left:0;">💌</span>
+                <span class="tp-stack-cell" style="background:#5c7a9a; left:26px;">🥂</span>
+                <span class="tp-stack-cell" style="background:#34291d; left:52px;">💒</span>
+              </div>
               <p class="flappy-start-title">Svatební Tetris</p>
-              <p class="flappy-start-sub">Klikni pro start. Mezerník otáčí, šipky vlevo/vpravo posouvají, šipka dolů zrychlí pád.</p>
+              <button type="button" class="btn btn-primary" id="tetrisStartBtn">▶ Hrát</button>
+              <p class="flappy-start-sub">Mezerník otáčí, šipky vlevo/vpravo posouvají, šipka dolů zrychlí pád.</p>
             </div>
             <div class="flappy-endmsg" id="tetrisEndMsg">
               <div class="endmsg-phase" id="tetrisEndForm">
@@ -1968,6 +2103,7 @@
               </div>
               <div class="endmsg-phase" id="tetrisEndResult" style="display:none;">
                 <p class="endmsg-title" id="tetrisRankText">Jsi na 1. místě!</p>
+                <table class="endmsg-mini-leaderboard" id="tetrisMiniLeaderboard"></table>
                 <button class="btn btn-primary" id="tetrisPlayAgain" type="button">Hrát znovu ↻</button>
               </div>
             </div>
@@ -2124,7 +2260,7 @@
         </div>
         <p class="quiz-result" id="quizResult"></p>
       </div>
-      <button class="add-block-btn" data-add-block="game">+ Přidat blok</button>
+      <div class="add-btn-row"><button class="add-block-btn" data-add-block="game">+ Přidat blok</button><button class="add-block-btn add-photo-btn" data-add-block="game">+ Přidat fotku</button></div>
     </section>
 
 
@@ -2155,7 +2291,7 @@
         <span class="block-label editable" data-edit-id="guests-rsvp-label">Potvrzení účasti</span>
         <p class="editable" data-edit-id="guests-rsvp-text">Svou účast nám prosím potvrďte předem — osobně, telefonicky nebo zprávou. Kontakty najdete v záložce Kontakt.</p>
       </div>
-      <button class="add-block-btn" data-add-block="guests">+ Přidat blok</button>
+      <div class="add-btn-row"><button class="add-block-btn" data-add-block="guests">+ Přidat blok</button><button class="add-block-btn add-photo-btn" data-add-block="guests">+ Přidat fotku</button></div>
     </section>
 
     <!-- CONTACT -->
@@ -2181,7 +2317,7 @@
         <span class="drag-handle-block">⠿</span>
         <p class="editable" data-edit-id="contact-note-text">Máte-li jakýkoli dotaz, neváhejte nás kontaktovat. Budeme se na Vás moc těšit!</p>
       </div>
-      <button class="add-block-btn" data-add-block="contact">+ Přidat blok</button>
+      <div class="add-btn-row"><button class="add-block-btn" data-add-block="contact">+ Přidat blok</button><button class="add-block-btn add-photo-btn" data-add-block="contact">+ Přidat fotku</button></div>
     </section>
 
   </main>
@@ -2374,13 +2510,49 @@
     editorPanel.classList.toggle('open', editMode);
   }
 
+  function apiVerifyPassword(pw){
+    return fetch(SITE_CONTENT_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw, verifyOnly: true })
+    }).then(function(res){
+      if(res.status === 401) return false;
+      if(!res.ok) throw new Error('verify_failed');
+      return true;
+    });
+  }
+
   function enterEditMode(){
     var cached = getCachedPassword();
-    if(cached){ setEditMode(true); return; }
+    if(cached){
+      apiVerifyPassword(cached).then(function(ok){
+        if(ok){ setEditMode(true); }
+        else{
+          clearCachedPassword();
+          showToast('Heslo už neplatí — zadej ho znovu');
+          promptForPasswordAndEnter();
+        }
+      }).catch(function(){
+        alert('Nejde se spojit se serverem pro ověření hesla, takže úpravy teď nejdou zpřístupnit. Zkus to prosím znovu, až budeš mít připojení.');
+      });
+      return;
+    }
+    promptForPasswordAndEnter();
+  }
+
+  function promptForPasswordAndEnter(){
     var pw = prompt('Zadej heslo pro úpravu webu:');
     if(pw === null || pw === '') return;
-    setCachedPassword(pw);
-    setEditMode(true);
+    apiVerifyPassword(pw).then(function(ok){
+      if(ok){
+        setCachedPassword(pw);
+        setEditMode(true);
+      } else {
+        alert('Špatné heslo — zkus to znovu.');
+      }
+    }).catch(function(){
+      alert('Nejde se spojit se serverem pro ověření hesla, takže úpravy teď nejdou zpřístupnit. Zkus to prosím znovu, až budeš mít připojení.');
+    });
   }
 
   editToggle.addEventListener('click', function(){
@@ -2442,6 +2614,41 @@
     });
   }
 
+  /* ---------------- DRAG A BLOCK ONTO A TAB TO MOVE IT THERE ---------------- */
+  var draggedBlockForTabMove = null;
+  document.addEventListener('dragstart', function(e){
+    if(!editMode) return;
+    var block = e.target.closest('.block');
+    if(block) draggedBlockForTabMove = block;
+  });
+  document.addEventListener('dragend', function(){
+    draggedBlockForTabMove = null;
+    document.querySelectorAll('.tab-btn.drop-target').forEach(function(b){ b.classList.remove('drop-target'); });
+  });
+  document.addEventListener('dragover', function(e){
+    if(!editMode || !draggedBlockForTabMove) return;
+    var tabBtn = e.target.closest('.tab-btn');
+    if(!tabBtn) return;
+    e.preventDefault();
+    document.querySelectorAll('.tab-btn.drop-target').forEach(function(b){ if(b !== tabBtn) b.classList.remove('drop-target'); });
+    tabBtn.classList.add('drop-target');
+  });
+  document.addEventListener('drop', function(e){
+    if(!editMode || !draggedBlockForTabMove) return;
+    var tabBtn = e.target.closest('.tab-btn');
+    if(!tabBtn) return;
+    e.preventDefault();
+    var targetPanel = document.querySelector('.tab-panel[data-tab="'+tabBtn.dataset.tab+'"]');
+    if(targetPanel){
+      var addRow = targetPanel.querySelector('.add-btn-row');
+      if(addRow){ targetPanel.insertBefore(draggedBlockForTabMove, addRow); }
+      else{ targetPanel.appendChild(draggedBlockForTabMove); }
+      showToast('Blok přesunut do záložky „' + (tabBtn.querySelector('.tab-label') ? tabBtn.querySelector('.tab-label').textContent : '') + '"');
+    }
+    tabBtn.classList.remove('drop-target');
+    draggedBlockForTabMove = null;
+  });
+
   /* ---------------- DELETE / ADD (event delegation, survives dynamic content) ---------------- */
   document.addEventListener('click', function(e){
     var td = e.target.closest('.tab-delete');
@@ -2460,6 +2667,9 @@
 
     var abb = e.target.closest('.add-block-btn');
     if(abb){ addBlock(abb.dataset.addBlock, abb); return; }
+
+    var apb = e.target.closest('.add-photo-btn');
+    if(apb){ addPhotoBlock(apb.dataset.addBlock, apb); return; }
 
     var pub = e.target.closest('.photo-upload-btn');
     if(pub){
@@ -2613,10 +2823,40 @@
     }
   }
 
+  function addPhotoBlock(tabId, triggerBtn){
+    var panel = document.querySelector('.tab-panel[data-tab="'+tabId+'"]');
+    if(!panel) return;
+    var uid = 'photo-' + Date.now();
+    var div = document.createElement('div');
+    div.className = 'block';
+    div.dataset.blockId = uid;
+    div.draggable = editMode;
+    div.innerHTML =
+      '<span class="block-delete">✕</span><span class="drag-handle-block">⠿</span>' +
+      '<span class="block-label editable" data-edit-id="'+uid+'-label">Fotka</span>' +
+      '<div class="photo-block free-photo-block" data-photo-id="'+uid+'">' +
+        '<span class="photo-placeholder-label">Sem vlož fotku</span>' +
+        '<button type="button" class="photo-upload-btn">Nahrát fotku</button>' +
+        '<input type="file" accept="image/*" class="photo-file-input" hidden>' +
+      '</div>';
+    panel.insertBefore(div, triggerBtn);
+    if(editMode){
+      div.querySelectorAll('.editable').forEach(function(el){ el.contentEditable = 'true'; });
+    }
+  }
+
   /* ---------------- SAVE / LOAD (whole-site snapshot draft) ---------------- */
+  function getCleanSiteWrapHTML(){
+    var clone = document.querySelector('.site-wrap').cloneNode(true);
+    clone.querySelectorAll('.editable').forEach(function(el){ el.removeAttribute('contenteditable'); });
+    clone.querySelectorAll('[draggable]').forEach(function(el){ el.setAttribute('draggable', 'false'); });
+    clone.querySelectorAll('.dragging').forEach(function(el){ el.classList.remove('dragging'); });
+    return clone.outerHTML;
+  }
+
   function collectConfig(){
     return {
-      siteWrapHTML: document.querySelector('.site-wrap').outerHTML,
+      siteWrapHTML: getCleanSiteWrapHTML(),
       fonts: {
         heading: getVar('--font-heading'),
         body: getVar('--font-body')
@@ -2772,6 +3012,13 @@
 
   if(saved && saved.siteWrapHTML){
     document.querySelector('.site-wrap').outerHTML = saved.siteWrapHTML;
+    // Safety net: never trust stored HTML to be non-editable, even if it
+    // was accidentally saved while edit mode was on. Force it closed.
+    document.querySelectorAll('.editable').forEach(function(el){ el.removeAttribute('contenteditable'); });
+    document.querySelectorAll('[draggable]').forEach(function(el){ el.setAttribute('draggable', 'false'); });
+    document.querySelectorAll('.tab-delete, .block-delete, .add-tab-btn, .add-block-btn, .photo-upload-btn')
+      .forEach(function(el){ el.blur && el.blur(); });
+    document.body.classList.remove('edit-mode');
   }
   if(saved){
     applyColorsFonts(saved);
@@ -2867,6 +3114,27 @@
     if(!el) return null;
     var bg = el.style.backgroundImage;
     return (bg && bg.indexOf('url') === 0) ? bg : null;
+  }
+
+  function renderMiniLeaderboard(tableEl, list, highlightEntry){
+    if(!tableEl) return;
+    var top5 = list.slice().sort(function(a, b){ return b.score - a.score; }).slice(0, 5);
+    if(top5.length === 0){
+      tableEl.innerHTML = '';
+      return;
+    }
+    tableEl.innerHTML = '';
+    top5.forEach(function(entry, i){
+      var tr = document.createElement('tr');
+      if(highlightEntry && entry === highlightEntry) tr.className = 'me';
+      var nameTd = document.createElement('td');
+      nameTd.textContent = (i + 1) + '. ' + entry.name;
+      var scoreTd = document.createElement('td');
+      scoreTd.textContent = entry.score;
+      tr.appendChild(nameTd);
+      tr.appendChild(scoreTd);
+      tableEl.appendChild(tr);
+    });
   }
 
   function renderTeamStatsUI(prefix, bridePct, groomPct){
@@ -2974,6 +3242,8 @@
     var invulnerable = false;
     var invulnTimeout = null;
     var playerY, velocity, score, best = 0;
+    var BASE_HEIGHT = 440;
+    var physicsScale = 1;
     var GRAVITY = 0.45;
     var FLAP = -7.2;
     var PILLAR_SPEED = 2.6;
@@ -3059,6 +3329,20 @@
           playerInitial.textContent = currentTeam === 'groom' ? 'A' : 'K';
         }
       }
+      var previewBird = document.getElementById('flappyPreviewBird');
+      var previewInitial = document.getElementById('flappyPreviewInitial');
+      if(previewBird){
+        if(bg){
+          previewBird.style.backgroundImage = bg;
+          if(previewInitial) previewInitial.style.display = 'none';
+        } else {
+          previewBird.style.backgroundImage = 'none';
+          if(previewInitial){
+            previewInitial.style.display = 'block';
+            previewInitial.textContent = currentTeam === 'groom' ? 'A' : 'K';
+          }
+        }
+      }
     }
 
     function resetPillars(){
@@ -3084,7 +3368,7 @@
 
     function flap(){
       if(!running) return;
-      velocity = FLAP;
+      velocity = FLAP * physicsScale;
     }
 
     function updateLivesHud(){
@@ -3148,7 +3432,7 @@
     function tick(frameFactor){
       var areaHeight = area.clientHeight;
 
-      velocity += GRAVITY * frameFactor;
+      velocity += GRAVITY * physicsScale * frameFactor;
       playerY += velocity * frameFactor;
 
       if(playerY < 0){ playerY = 0; handleCrash(); }
@@ -3243,6 +3527,7 @@
       invulnerable = false;
       if(invulnTimeout) clearTimeout(invulnTimeout);
       player.classList.remove('invuln');
+      physicsScale = Math.max(0.62, Math.min(1, area.clientHeight / BASE_HEIGHT));
       playerY = area.clientHeight / 2 - 21;
       velocity = 0;
       if(scoreEl) scoreEl.textContent = '0';
@@ -3296,13 +3581,22 @@
       }
     });
 
-    area.addEventListener('click', function(){
+    var lastFlappyTouchTime = 0;
+    function handleAreaTap(){
       if(!running){
         if(endMsg && endMsg.classList.contains('show')) return;
         startGame();
         return;
       }
       flap();
+    }
+    area.addEventListener('touchstart', function(){
+      lastFlappyTouchTime = Date.now();
+      handleAreaTap();
+    }, { passive: true });
+    area.addEventListener('click', function(){
+      if(Date.now() - lastFlappyTouchTime < 500) return;
+      handleAreaTap();
     });
     document.addEventListener('keydown', function(e){
       if(e.key !== ' ' && e.key !== 'Spacebar') return;
@@ -3314,12 +3608,15 @@
       if(running) flap();
     });
 
-    function showRankResult(rank, total){
+    var miniLbEl = document.getElementById('flappyMiniLeaderboard');
+
+    function showRankResult(rank, total, list, highlightEntry){
       if(rankTextEl){
         rankTextEl.textContent = (rank === 1)
           ? '🏆 Jsi na 1. místě z ' + total + '!'
           : 'Jsi na ' + rank + '. místě z ' + total + '!';
       }
+      if(list) renderMiniLeaderboard(miniLbEl, list, highlightEntry);
       if(endForm) endForm.style.display = 'none';
       if(endResult) endResult.style.display = '';
     }
@@ -3332,7 +3629,8 @@
         submitBtn.disabled = true;
         apiPostScore(GAME_NAME, entry).then(function(data){
           submitBtn.disabled = false;
-          showRankResult(data.rank, data.total);
+          var matched = data.list.find(function(e){ return e.name === entry.name && e.score === entry.score; }) || entry;
+          showRankResult(data.rank, data.total, data.list, matched);
           renderLeaderboardList(data.list);
           setTimeout(refreshStatsOnly, 1500);
         }).catch(function(){
@@ -3344,7 +3642,7 @@
           var rank = sorted.indexOf(entry) + 1;
           renderLeaderboardList(list);
           renderStatsFromList(list);
-          showRankResult(rank, sorted.length);
+          showRankResult(rank, sorted.length, list, entry);
         });
       });
     }
@@ -3355,6 +3653,11 @@
         if(endForm) endForm.style.display = 'none';
         if(endResult) endResult.style.display = '';
         if(rankTextEl) rankTextEl.textContent = 'Skóre ' + score + ' — hotovo!';
+        apiGetLeaderboard(GAME_NAME).then(function(list){
+          renderMiniLeaderboard(miniLbEl, list, null);
+        }).catch(function(){
+          renderMiniLeaderboard(miniLbEl, loadLocalLeaderboard(), null);
+        });
       });
     }
 
@@ -3838,12 +4141,15 @@
       }
     });
 
-    function showRankResult(rank, total){
+    var miniLbEl = document.getElementById('tetrisMiniLeaderboard');
+
+    function showRankResult(rank, total, list, highlightEntry){
       if(rankTextEl){
         rankTextEl.textContent = (rank === 1)
           ? '🏆 Jsi na 1. místě z ' + total + '!'
           : 'Jsi na ' + rank + '. místě z ' + total + '!';
       }
+      if(list) renderMiniLeaderboard(miniLbEl, list, highlightEntry);
       if(endForm) endForm.style.display = 'none';
       if(endResult) endResult.style.display = '';
     }
@@ -3856,7 +4162,8 @@
         submitBtn.disabled = true;
         apiPostScore(GAME_NAME, entry).then(function(data){
           submitBtn.disabled = false;
-          showRankResult(data.rank, data.total);
+          var matched = data.list.find(function(e){ return e.name === entry.name && e.score === entry.score; }) || entry;
+          showRankResult(data.rank, data.total, data.list, matched);
           renderLeaderboardList(data.list);
           setTimeout(refreshStatsOnly, 1500);
         }).catch(function(){
@@ -3868,7 +4175,7 @@
           var rank = sorted.indexOf(entry) + 1;
           renderLeaderboardList(list);
           renderStatsFromList(list);
-          showRankResult(rank, sorted.length);
+          showRankResult(rank, sorted.length, list, entry);
         });
       });
     }
@@ -3879,6 +4186,11 @@
         if(endForm) endForm.style.display = 'none';
         if(endResult) endResult.style.display = '';
         if(rankTextEl) rankTextEl.textContent = 'Skóre ' + score + ' — hotovo!';
+        apiGetLeaderboard(GAME_NAME).then(function(list){
+          renderMiniLeaderboard(miniLbEl, list, null);
+        }).catch(function(){
+          renderMiniLeaderboard(miniLbEl, loadLocalLeaderboard(), null);
+        });
       });
     }
 
