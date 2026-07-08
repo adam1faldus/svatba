@@ -365,6 +365,15 @@
     max-width: 420px;
     margin: 0 auto;
   }
+  .block-inline-photo{
+    aspect-ratio: 4 / 3;
+    max-width: 360px;
+    width: 60%;
+    margin: 4px auto 20px;
+  }
+  @media (max-width: 640px){
+    .block-inline-photo{ width: 100%; max-width: none; }
+  }
   .tab-btn .drag-handle{
     display:none;
     cursor: grab;
@@ -429,6 +438,25 @@
     user-select:none;
   }
   body.edit-mode .drag-handle-block{ display:block; }
+  .block-add-photo{
+    display:none;
+    position:absolute;
+    top: 8px;
+    right: 40px;
+    align-items:center;
+    justify-content:center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: none;
+    background: none;
+    color: var(--color-accent-2);
+    font-size: 15px;
+    cursor:pointer;
+    opacity: 0.65;
+  }
+  .block-add-photo:hover{ opacity: 1; background: rgba(92,122,99,0.12); }
+  body.edit-mode .block-add-photo{ display:flex; }
   body.edit-mode .block{ outline: 1px dashed transparent; }
   body.edit-mode .block:hover{ outline-color: var(--color-accent); }
   body.edit-mode .editable{ outline: 1px dashed transparent; border-radius:2px; }
@@ -1824,13 +1852,13 @@
     <section class="tab-panel active" data-tab="home" role="tabpanel" id="panel-home" aria-labelledby="tabbtn-home" tabindex="0">
       <div class="block plain" data-block-id="home-quote">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <p class="quote-text editable" data-edit-id="home-quote-text">S radostí oznamujeme, že se budeme brát, a tímto Vás srdečně zveme na naši svatbu.</p>
       </div>
 
       <div class="block plain" data-block-id="home-countdown">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <span class="block-label editable" data-edit-id="home-countdown-label">Do svatby zbývá</span>
         <div class="countdown" id="countdown">
           <div class="cd-item"><span class="cd-num" id="cd-days">0</span><span class="cd-lab editable" data-edit-id="cd-lab-days">dní</span></div>
@@ -1842,7 +1870,7 @@
 
       <div class="block plain" data-block-id="home-flower">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <div class="center-flower bg-spray" role="img" aria-label="Kaččina malovaná kytička"></div>
       </div>
       <div class="add-btn-row"><button class="add-block-btn" data-add-block="home">+ Přidat blok</button><button class="add-block-btn add-photo-btn" data-add-block="home">+ Přidat fotku</button></div>
@@ -1852,7 +1880,7 @@
     <section class="tab-panel" data-tab="story" role="tabpanel" id="panel-story" aria-labelledby="tabbtn-story" tabindex="0">
       <div class="block" data-block-id="story-photo">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <span class="block-label editable" data-edit-id="story-photo-label">Náš příběh</span>
         <div class="photo-block" data-photo-id="story-main">
           <span class="photo-placeholder-label">Sem vlož společnou fotku</span>
@@ -1863,7 +1891,7 @@
       </div>
       <div class="block" data-block-id="story-text">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <h2 class="editable" data-edit-id="story-title">Jak to celé začalo</h2>
         <p class="editable" data-edit-id="story-text-1">Sem doplníme, jak jsme se poznali a co nás k sobě přivedlo.</p>
         <p class="editable" data-edit-id="story-text-2">A sem třeba to, jak proběhly zásnuby.</p>
@@ -1875,7 +1903,7 @@
     <section class="tab-panel" data-tab="when" role="tabpanel" id="panel-when" aria-labelledby="tabbtn-when" tabindex="0">
       <div class="block" data-block-id="when-ceremony">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <span class="block-label editable" data-edit-id="when-ceremony-label">Obřad</span>
         <h2 class="editable" data-edit-id="when-ceremony-time">Sobota 15. srpna 2026 ve 12:00</h2>
         <p class="editable" data-edit-id="when-ceremony-place">Obřad proběhne v Hořenicích u Jaroměře.</p>
@@ -1883,7 +1911,7 @@
 
       <div class="block" data-block-id="when-venue">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <span class="block-label editable" data-edit-id="when-venue-label">Místo konání</span>
         <h2 class="venue-name editable" data-edit-id="when-venue-name">Stodola „Tvrz Hořenice“</h2>
         <p class="venue-address editable" data-edit-id="when-venue-address">Hořenice 1, 551 01 Hořenice</p>
@@ -1899,7 +1927,7 @@
     <section class="tab-panel" data-tab="program" role="tabpanel" id="panel-program" aria-labelledby="tabbtn-program" tabindex="0">
       <div class="block" data-block-id="program-timeline">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <span class="block-label editable" data-edit-id="program-label">Harmonogram dne</span>
         <div class="timeline">
           <div class="t-item">
@@ -1931,21 +1959,21 @@
     <section class="tab-panel" data-tab="travel" role="tabpanel" id="panel-travel" aria-labelledby="tabbtn-travel" tabindex="0">
       <div class="block" data-block-id="travel-transport">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <span class="block-label editable" data-edit-id="travel-transport-label">Doprava</span>
         <h2 class="editable" data-edit-id="travel-transport-title">Jak se k nám dostanete</h2>
         <p class="editable" data-edit-id="travel-transport-text">Sem doplníme informace o parkování a možnostech společné dopravy. Pokud pojedete autem, parkování bude možné přímo v areálu.</p>
       </div>
       <div class="block" data-block-id="travel-stay">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <span class="block-label editable" data-edit-id="travel-stay-label">Ubytování</span>
         <h2 class="editable" data-edit-id="travel-stay-title">Kde přespat</h2>
         <p class="editable" data-edit-id="travel-stay-text">Sem doplníme pár tipů na ubytování v okolí Hořenic a Jaroměře.</p>
       </div>
       <div class="block" data-block-id="travel-nearby">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <span class="block-label editable" data-edit-id="travel-nearby-label">Tipy na okolí</span>
         <h2 class="editable" data-edit-id="travel-nearby-title">Co u nás vidět, když zůstanete déle</h2>
         <p class="editable" data-edit-id="travel-nearby-text">Sem doplníme pár tipů na výlet po okolí pro hosty, kteří přijedou zdaleka.</p>
@@ -1957,7 +1985,7 @@
     <section class="tab-panel" data-tab="gallery" role="tabpanel" id="panel-gallery" aria-labelledby="tabbtn-gallery" tabindex="0">
       <div class="block" data-block-id="gallery-main">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <span class="block-label editable" data-edit-id="gallery-label">Fotogalerie</span>
         <p class="editable" data-edit-id="gallery-intro">Pár fotek na dobrou náladu, než se sejdeme naživo.</p>
         <div class="photo-grid">
@@ -1994,7 +2022,7 @@
     <section class="tab-panel" data-tab="game" role="tabpanel" id="panel-game" aria-labelledby="tabbtn-game" tabindex="0">
       <div class="block plain" data-block-id="game-intro">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <span class="block-label editable" data-edit-id="game-label">Pro chvíli čekání</span>
         <h2 class="editable" data-edit-id="game-title">Pro chvíli čekání</h2>
         <p class="editable" data-edit-id="game-text">Vyberte si hru, vyberte tým a hrajte — než dorazí jídlo, než přijde řada na přípitek, nebo jen tak pro zábavu.</p>
@@ -2003,7 +2031,7 @@
       <!-- SCREEN 1: game hub / menu -->
       <div class="block" data-block-id="game-hub" id="gameHubScreen">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <span class="block-label editable" data-edit-id="game-hub-label">Vyber si hru</span>
         <div class="game-menu">
           <button type="button" class="game-card" data-game="tetris">
@@ -2249,7 +2277,7 @@
 
       <div class="block" data-block-id="quiz-block">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <p class="editable" style="font-size:0.85rem; color:var(--color-accent-2); font-family:var(--font-label); margin-bottom:24px;" data-edit-id="quiz-editor-hint">V editačním režimu klikněte na hvězdičku ★ u správné odpovědi, ať si hru sami taky nastavíte.</p>
 
         <div class="quiz-list" id="quizList">
@@ -2368,26 +2396,26 @@
     <section class="tab-panel" data-tab="guests" role="tabpanel" id="panel-guests" aria-labelledby="tabbtn-guests" tabindex="0">
       <div class="block" data-block-id="guests-dresscode">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <span class="block-label editable" data-edit-id="guests-dresscode-label">Dress code</span>
         <h2 class="editable" data-edit-id="guests-dresscode-title">Jak se obléci</h2>
         <p class="editable" data-edit-id="guests-dresscode-text">Sem doplníme informace o dress codu a barvách naší svatby.</p>
       </div>
       <div class="block" data-block-id="guests-pets">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <span class="block-label editable" data-edit-id="guests-pets-label">Mazlíčci</span>
         <p class="editable" data-edit-id="guests-pets-text">Na svatbě rádi přivítáme i Vaše mazlíčky!</p>
       </div>
       <div class="block" data-block-id="guests-gifts">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <span class="block-label editable" data-edit-id="guests-gifts-label">Dary</span>
         <p class="editable" data-edit-id="guests-gifts-text">Vaše přítomnost je pro nás největším darem. Pokud byste nás přesto rádi obdarovali, sem doplníme více informací.</p>
       </div>
       <div class="block" data-block-id="guests-rsvp">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <span class="block-label editable" data-edit-id="guests-rsvp-label">Potvrzení účasti</span>
         <p class="editable" data-edit-id="guests-rsvp-text">Svou účast nám prosím potvrďte předem — osobně, telefonicky nebo zprávou. Kontakty najdete v záložce Kontakt.</p>
       </div>
@@ -2398,7 +2426,7 @@
     <section class="tab-panel" data-tab="contact" role="tabpanel" id="panel-contact" aria-labelledby="tabbtn-contact" tabindex="0">
       <div class="block grid-2" data-block-id="contact-people" style="display:grid;">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <div>
           <span class="block-label editable" data-edit-id="contact-bride-label">Nevěsta</span>
           <h2 class="editable" data-edit-id="contact-bride-name">Kačka</h2>
@@ -2414,7 +2442,7 @@
       </div>
       <div class="block plain" data-block-id="contact-note">
         <span class="block-delete">✕</span>
-        <span class="drag-handle-block">⠿</span>
+        <span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>
         <p class="editable" data-edit-id="contact-note-text">Máte-li jakýkoli dotaz, neváhejte nás kontaktovat. Budeme se na Vás moc těšit!</p>
       </div>
       <div class="add-btn-row"><button class="add-block-btn" data-add-block="contact">+ Přidat blok</button><button class="add-block-btn add-photo-btn" data-add-block="contact">+ Přidat fotku</button></div>
@@ -2783,6 +2811,9 @@
     var apb = e.target.closest('.add-photo-btn');
     if(apb){ addPhotoBlock(apb.dataset.addBlock, apb); return; }
 
+    var bap = e.target.closest('.block-add-photo');
+    if(bap){ addPhotoIntoBlock(bap.closest('.block')); return; }
+
     var pub = e.target.closest('.photo-upload-btn');
     if(pub){
       var input = pub.parentElement.querySelector('.photo-file-input');
@@ -2993,7 +3024,7 @@
     panel.setAttribute('tabindex', '0');
     panel.innerHTML =
       '<div class="block" data-block-id="'+id+'-block-1">' +
-        '<span class="block-delete">✕</span><span class="drag-handle-block">⠿</span>' +
+        '<span class="block-delete">✕</span><span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>' +
         '<h2 class="editable" data-edit-id="'+id+'-h">Nový nadpis</h2>' +
         '<p class="editable" data-edit-id="'+id+'-p">Sem napiš text.</p>' +
       '</div>' +
@@ -3017,12 +3048,39 @@
     div.dataset.blockId = uid;
     div.draggable = editMode;
     div.innerHTML =
-      '<span class="block-delete">✕</span><span class="drag-handle-block">⠿</span>' +
+      '<span class="block-delete">✕</span><span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>' +
       '<h2 class="editable" data-edit-id="'+uid+'-h">Nový nadpis</h2>' +
       '<p class="editable" data-edit-id="'+uid+'-p">Sem napiš text.</p>';
     panel.insertBefore(div, triggerBtn);
     if(editMode){
       div.querySelectorAll('.editable').forEach(function(el){ el.contentEditable = 'true'; });
+    }
+  }
+
+  function addPhotoIntoBlock(block){
+    if(!block) return;
+    if(block.querySelector('.photo-block')){
+      showToast('Tenhle blok už fotku má — přidej novou přes „+ Přidat fotku" dole v záložce');
+      return;
+    }
+    var uid = 'blockphoto-' + Date.now();
+    var wrap = document.createElement('div');
+    wrap.className = 'photo-block block-inline-photo';
+    wrap.dataset.photoId = uid;
+    wrap.innerHTML =
+      '<span class="photo-placeholder-label">Sem vlož fotku</span>' +
+      '<button type="button" class="photo-upload-btn">Nahrát fotku</button>' +
+      '<input type="file" accept="image/*" class="photo-file-input" hidden>' +
+      '<span class="photo-resize-handle" title="Táhni pro změnu velikosti"></span>';
+    var label = block.querySelector('.block-label');
+    if(label && label.nextSibling){
+      block.insertBefore(wrap, label.nextSibling);
+    } else if(label){
+      block.appendChild(wrap);
+    } else {
+      var heading = block.querySelector('h2, h3');
+      if(heading){ block.insertBefore(wrap, heading); }
+      else { block.appendChild(wrap); }
     }
   }
 
@@ -3035,7 +3093,7 @@
     div.dataset.blockId = uid;
     div.draggable = editMode;
     div.innerHTML =
-      '<span class="block-delete">✕</span><span class="drag-handle-block">⠿</span>' +
+      '<span class="block-delete">✕</span><span class="drag-handle-block">⠿</span><button type="button" class="block-add-photo" title="Přidat fotku do tohoto bloku">📷</button>' +
       '<span class="block-label editable" data-edit-id="'+uid+'-label">Fotka</span>' +
       '<div class="photo-block free-photo-block" data-photo-id="'+uid+'">' +
         '<span class="photo-placeholder-label">Sem vlož fotku</span>' +
