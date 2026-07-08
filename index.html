@@ -1056,7 +1056,11 @@
     background: var(--color-bg);
     touch-action: manipulation;
   }
-  .tetris-board-wrap.pseudo-fullscreen{ flex-direction: column; }
+  .tetris-board-wrap.pseudo-fullscreen{
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 12px;
+  }
   .tetris-board-wrap.pseudo-fullscreen .tetris-hud{
     margin-bottom: 6px;
   }
@@ -1065,29 +1069,37 @@
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
+    right: 56px;
     z-index: 10000;
     background: rgba(248,242,229,0.94);
-    padding: 12px 16px;
+    padding: 10px 14px;
     margin: 0;
-    border-radius: 0 0 14px 14px;
-    max-width: 420px;
-    margin-left: auto;
-    margin-right: auto;
+    border-radius: 0 0 14px 0;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .pseudo-fullscreen .fullscreen-btn{
+    position: fixed !important;
+    top: 8px !important;
+    right: 8px !important;
+    z-index: 10002 !important;
+    background: var(--color-heading);
+    color: #fff;
+    border: none;
   }
   body.pseudo-fullscreen-active .tetris-controls{
     position: fixed;
-    bottom: 18px;
+    bottom: 10px;
     left: 0;
     right: 0;
     z-index: 10000;
     background: rgba(248,242,229,0.92);
-    padding: 14px 10px;
+    padding: 10px 8px;
     margin: 0;
     border-radius: 16px 16px 0 0;
     touch-action: manipulation;
+    gap: 12px;
   }
+  body.pseudo-fullscreen-active #tetrisDrop{ display: none; }
   body.pseudo-fullscreen-active .tetris-hint{ display: none; }
   .tetris-ctrl-btn{ touch-action: manipulation; }
   .fullscreen-btn{
@@ -4306,10 +4318,10 @@
       var controlsHeight = controlsEl ? controlsEl.offsetHeight : 0;
       var hudHeight = hudEl ? hudEl.offsetHeight : 0;
       var viewportHeight = getReliableViewportHeight();
-      var SAFETY_MARGIN = 70;
-      var available = (viewportHeight - controlsHeight - hudHeight - SAFETY_MARGIN) * 0.92;
+      var SAFETY_MARGIN = 40; /* top padding 12 + controls bottom offset 10 + buffer */
+      var available = viewportHeight - controlsHeight - hudHeight - SAFETY_MARGIN;
       if(available < 180) available = 180;
-      var maxWidth = window.innerWidth * 0.88;
+      var maxWidth = window.innerWidth * 0.94;
       var width = Math.min(maxWidth, available * 0.6);
       var height = width / 0.6;
       if(height > available){ height = available; width = height * 0.6; }
